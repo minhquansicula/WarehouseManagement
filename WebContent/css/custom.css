@@ -1,0 +1,7 @@
+/* Custom styles for Warehouse Management System */
+body {
+  background: #f8f9fa;
+}
+.card {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.04);
+}
