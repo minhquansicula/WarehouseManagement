@@ -11,9 +11,9 @@ import java.sql.SQLException;
 public class DBConnectionManager {
 
     // TODO: update these values to match your Oracle DB
-    private static final String URL = "jdbc:oracle:thin:@localhost:1521:XE";
-    private static final String USER = "wms_user";
-    private static final String PASS = "wms_password";
+    private static final String URL = "jdbc:oracle:thin:@localhost:1521:XE/XEPDB1";
+    private static final String USER = "system";
+    private static final String PASS = "12345";
     private static final String DRIVER = "oracle.jdbc.driver.OracleDriver";
 
     static {

@@ -7,17 +7,39 @@
 <struts-config>
 
     <form-beans>
+
+        <form-bean
+            name="loginForm"
+            type="form.LoginForm"/>
+
     </form-beans>
 
     <action-mappings>
 
         <action
-            path="/dashboard "
+            path="/dashboard"
             type="action.DashboardAction">
 
             <forward
                 name="success"
                 path="/jsp/dashboard.jsp"/>
+
+        </action>
+
+        <action
+            path="/login"
+            type="action.LoginAction"
+            name="loginForm"
+            scope="request"
+            validate="false">
+
+            <forward
+                name="success"
+                path="/jsp/dashboard.jsp"/>
+
+            <forward
+                name="input"
+                path="/jsp/login.jsp"/>
 
         </action>
 
