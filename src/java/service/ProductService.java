@@ -18,4 +18,20 @@ public class ProductService {
     public int countAll() throws Exception {
         return dao.countAll();
     }
+
+    public ProductDTO getById(int id) throws Exception {
+        return dao.getById(id);
+    }
+
+    public int create(ProductDTO p) throws Exception {
+        return dao.insert(p);
+    }
+
+    public void update(ProductDTO p) throws Exception {
+        dao.update(p);
+    }
+
+    public void delete(int id) throws Exception {
+        dao.delete(id);
+    }
 }

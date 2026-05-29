@@ -18,7 +18,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">🏭 仕入先 (Suppliers)</a>
+          <a class="nav-link" href="<%=request.getContextPath()%>/suppliers.do">🏭 仕入先 (Suppliers)</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">📊 在庫 (Inventory)</a>

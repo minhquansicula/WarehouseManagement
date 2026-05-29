@@ -3,6 +3,9 @@ package action;
 import form.ProductForm;
 import dto.ProductDTO;
 import service.ProductService;
+import service.SupplierService;
+import entity.Supplier;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
@@ -17,6 +20,7 @@ import java.util.List;
  */
 public class ProductAction extends Action {
     private ProductService service = new ProductService();
+    private SupplierService supplierService = new SupplierService();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -34,7 +38,65 @@ public class ProductAction extends Action {
             return mapping.findForward("list");
         } else if (op.equals("form")) {
             // show add/edit form
+            try {
+                // load suppliers for dropdown
+                java.util.List<Supplier> suppliers = supplierService.listAll();
+                request.setAttribute("suppliers", suppliers);
+            } catch (Exception e) {
+                request.setAttribute("suppliers", new ArrayList<Supplier>());
+            }
+            String idStr = request.getParameter("id");
+            if (idStr != null) {
+                try {
+                    int id = Integer.parseInt(idStr);
+                    ProductDTO dto = service.getById(id);
+                    request.setAttribute("product", dto);
+                } catch (Exception e) {
+                    // ignore
+                }
+            }
             return mapping.findForward("form");
+        } else if (op.equals("create")) {
+            ProductForm pf = (ProductForm) form;
+            ProductDTO dto = new ProductDTO();
+            dto.setName(pf.getName());
+            dto.setPrice(pf.getPrice());
+            dto.setStock(pf.getStock());
+            dto.setSupplierId(pf.getSupplierId());
+            service.create(dto);
+            return new ActionForward(request.getContextPath() + "/products.do", true);
+        } else if (op.equals("edit")) {
+            // show edit form
+            try {
+                java.util.List<Supplier> suppliers = supplierService.listAll();
+                request.setAttribute("suppliers", suppliers);
+            } catch (Exception e) {
+                request.setAttribute("suppliers", new ArrayList<Supplier>());
+            }
+            String idStr = request.getParameter("id");
+            if (idStr != null) {
+                int id = Integer.parseInt(idStr);
+                ProductDTO dto = service.getById(id);
+                request.setAttribute("product", dto);
+            }
+            return mapping.findForward("form");
+        } else if (op.equals("update")) {
+            ProductForm pf = (ProductForm) form;
+            ProductDTO dto = new ProductDTO();
+            dto.setId(pf.getId());
+            dto.setName(pf.getName());
+            dto.setPrice(pf.getPrice());
+            dto.setStock(pf.getStock());
+            dto.setSupplierId(pf.getSupplierId());
+            service.update(dto);
+            return new ActionForward(request.getContextPath() + "/products.do", true);
+        } else if (op.equals("delete")) {
+            String idStr = request.getParameter("id");
+            if (idStr != null) {
+                int id = Integer.parseInt(idStr);
+                service.delete(id);
+            }
+            return new ActionForward(request.getContextPath() + "/products.do", true);
         }
         return mapping.findForward("list");
     }

@@ -12,6 +12,14 @@
             name="loginForm"
             type="form.LoginForm"/>
 
+        <form-bean
+            name="productForm"
+            type="form.ProductForm"/>
+
+        <form-bean
+            name="supplierForm"
+            type="form.SupplierForm"/>
+
     </form-beans>
 
     <action-mappings>
@@ -50,6 +58,32 @@
             <forward
                 name="success"
                 path="/jsp/login.jsp"/>
+
+        </action>
+        
+        <action
+            path="/products"
+            type="action.ProductAction"
+            name="productForm"
+            scope="request"
+            validate="false"
+            input="/jsp/product_form.jsp">
+
+            <forward name="list" path="/jsp/product_list.jsp"/>
+            <forward name="form" path="/jsp/product_form.jsp"/>
+
+        </action>
+
+        <action
+            path="/suppliers"
+            type="action.SupplierAction"
+            name="supplierForm"
+            scope="request"
+            validate="false"
+            input="/jsp/supplier_form.jsp">
+
+            <forward name="list" path="/jsp/supplier_list.jsp"/>
+            <forward name="form" path="/jsp/supplier_form.jsp"/>
 
         </action>
     </action-mappings>

@@ -4,6 +4,7 @@ import dto.ProductDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,4 +54,76 @@ public class ProductDAO extends BaseDAO {
     }
 
     // Additional methods (getById, insert, update, delete) can be added similarly.
+    public ProductDTO getById(int id) throws Exception {
+        String sql = "SELECT id, name, price, stock, supplier_id FROM products WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                ProductDTO p = new ProductDTO();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setSupplierId(rs.getInt("supplier_id"));
+                return p;
+            }
+            return null;
+        } finally {
+            closeQuietly(rs);
+            closeQuietly(ps);
+            closeQuietly(conn);
+        }
+    }
+
+    public int insert(ProductDTO p) throws Exception {
+        String sql = "INSERT INTO products (name, price, stock, supplier_id) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet keys = null;
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getPrice());
+            ps.setInt(3, p.getStock());
+            ps.setInt(4, p.getSupplierId());
+            ps.executeUpdate();
+            keys = ps.getGeneratedKeys();
+            if (keys != null && keys.next()) {
+                return keys.getInt(1);
+            }
+            return 0;
+        } finally {
+            closeQuietly(keys);
+            closeQuietly(ps);
+            closeQuietly(conn);
+        }
+    }
+
+    public void update(ProductDTO p) throws Exception {
+        String sql = "UPDATE products SET name = ?, price = ?, stock = ?, supplier_id = ? WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getName());
+            ps.setDouble(2, p.getPrice());
+            ps.setInt(3, p.getStock());
+            ps.setInt(4, p.getSupplierId());
+            ps.setInt(5, p.getId());
+            ps.executeUpdate();
+        }
+    }
+
+    public void delete(int id) throws Exception {
+        String sql = "DELETE FROM products WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
 }
+
